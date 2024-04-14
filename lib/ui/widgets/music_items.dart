@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:music_player/data/constants/constants.dart';
-import 'package:music_player/ui/home/cubit/home_cubit.dart';
-import 'package:on_audio_query/on_audio_query.dart';
+
+
+import '../../utils/tools/file_importers.dart';
 
 class MusicItem extends StatelessWidget {
   final SongModel songModel;

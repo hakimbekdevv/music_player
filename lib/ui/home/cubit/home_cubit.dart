@@ -1,8 +1,4 @@
-import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:music_player/ui/home/cubit/home_state.dart';
-import 'package:on_audio_query/on_audio_query.dart';
+import 'package:music_player/utils/tools/file_importers.dart';
 
 class HomeCubit extends Cubit<HomeStates> {
 
@@ -60,6 +56,11 @@ class HomeCubit extends Cubit<HomeStates> {
 
   void playPause() {
     player.playing? player.pause():player.play();
+    emit(HomeLoadedState(songs: songs));
+  }
+
+  void enableShuffleMode() {
+    player.shuffleModeEnabled?player.setShuffleModeEnabled(false):player.setShuffleModeEnabled(true);
     emit(HomeLoadedState(songs: songs));
   }
 

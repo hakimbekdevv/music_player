@@ -1,12 +1,4 @@
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:music_player/data/constants/constants.dart';
-
-import '../../tracks/presentation/tracks_screen.dart';
-import '../cubit/home_cubit.dart';
-import '../cubit/home_state.dart';
+import 'package:music_player/utils/tools/file_importers.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -74,24 +66,19 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         bottomNavigationBar: Container(
-          color: Colors.grey,
+          // color: Colors.grey,
           height: itemHeight*2,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // const SizedBox(
-              //   height: 3,
-              //   child: LinearProgressIndicator(
-              //     value: .7,
-              //     color: Colors.blue,
-              //   )
-              // ),
               StreamBuilder(
-                stream: context.watch<HomeCubit>().player.durationStream,
+                stream: context.watch<HomeCubit>().player.positionStream,
                 builder: (context, snapshot) => ProgressBar(
                   thumbGlowRadius: 0,
                   thumbRadius: 5,
-                  progress: Duration(seconds: 0),
+                  progress: snapshot.data!,
+                  progressBarColor:Colors.yellow,
+                  thumbColor: Colors.yellow,
                   total: context.watch<HomeCubit>().player.duration??Duration(seconds: 0),
                   onSeek: (value) {
                     context.read<HomeCubit>().player.seek(value);
@@ -109,7 +96,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           context.read<HomeCubit>().playPause();
                         },
                         icon: !context.read<HomeCubit>().player.playing?Icon(CupertinoIcons.play_fill):Icon(CupertinoIcons.pause_fill),
-                      )
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          context.read<HomeCubit>().enableShuffleMode();
+                        },
+                        icon: context.read<HomeCubit>(). player.shuffleModeEnabled?Icon(CupertinoIcons.shuffle):Icon(CupertinoIcons.arrow_right_arrow_left),
+                      ),
                     ],
                   )
                 ),
