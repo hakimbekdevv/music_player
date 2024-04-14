@@ -35,6 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         appBar: AppBar(
           bottom: const TabBar(
+            labelStyle: TextStyle(color: Color.fromRGBO(232, 213, 19, 1.0)),
+            indicatorColor: Color.fromRGBO(232, 213, 19, 1.0),
             isScrollable: true,
             tabAlignment: TabAlignment.start,
             tabs: [
@@ -65,8 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(),
           ],
         ),
-        bottomNavigationBar: Container(
-          // color: Colors.grey,
+        bottomNavigationBar: SizedBox(
           height: itemHeight*2,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   progress: snapshot.data!,
                   progressBarColor:Colors.yellow,
                   thumbColor: Colors.yellow,
-                  total: context.watch<HomeCubit>().player.duration??Duration(seconds: 0),
+                  total: context.watch<HomeCubit>().player.duration??const Duration(seconds: 0),
                   onSeek: (value) {
                     context.read<HomeCubit>().player.seek(value);
                   },
@@ -95,13 +96,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () {
                           context.read<HomeCubit>().playPause();
                         },
-                        icon: !context.read<HomeCubit>().player.playing?Icon(CupertinoIcons.play_fill):Icon(CupertinoIcons.pause_fill),
+                        icon: !context.read<HomeCubit>().player.playing?const Icon(Icons.play_arrow_rounded):const Icon(Icons.pause),
                       ),
                       IconButton(
                         onPressed: () {
                           context.read<HomeCubit>().enableShuffleMode();
                         },
-                        icon: context.read<HomeCubit>(). player.shuffleModeEnabled?Icon(CupertinoIcons.shuffle):Icon(CupertinoIcons.arrow_right_arrow_left),
+                        icon: context.read<HomeCubit>(). player.shuffleModeEnabled?const Icon(Icons.shuffle):const Icon(Icons.arrow_right_alt),
                       ),
                     ],
                   )
@@ -113,5 +114,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 }
