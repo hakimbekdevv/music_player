@@ -26,6 +26,5 @@ class HomeErrorState extends HomeStates {
   HomeErrorState({this.error});
 }
 
-enum BaseStates{errorState,loadingState,loadedState,changeState}
 
 

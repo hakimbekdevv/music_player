@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:music_player/utils/tools/file_importers.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,31 +37,45 @@ class _HomeScreenState extends State<HomeScreen> {
       length: 5,
       initialIndex: 1,
       child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
-          bottom: const TabBar(
-            labelStyle: TextStyle(color: Color.fromRGBO(232, 213, 19, 1.0)),
-            indicatorColor: Color.fromRGBO(232, 213, 19, 1.0),
+          flexibleSpace: ClipRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+              child: Container(
+                color: Colors.white10.withAlpha(100),
+              ),
+            ),
+          ),
+          elevation: 0,
+          bottom: TabBar(
+            dividerHeight: 0,
+            labelColor: Theme.of(context).colorScheme.onPrimary,
+            unselectedLabelColor: Theme.of(context).colorScheme.primary,
+            indicatorColor: const Color.fromRGBO(232, 213, 19, 1.0),
             isScrollable: true,
             tabAlignment: TabAlignment.start,
-            tabs: [
+            tabs: const [
               Tab(
-                child: Text("Playlists"),
+                child: Text("PLAYLISTS"),
               ),
               Tab(
-                child: Text("Tracks"),
+                child: Text("TRACKS"),
               ),
               Tab(
-                child: Text("Albums"),
+                child: Text("ALBUMS"),
               ),
               Tab(
-                child: Text("Artists"),
+                child: Text("ARTISTS"),
               ),
               Tab(
-                child: Text("Genres"),
+                child: Text("GENRES"),
               ),
             ],
           ),
         ),
+        drawer: const Drawer(),
         body: const TabBarView(
           children: [
             SizedBox(),
@@ -68,46 +86,34 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         bottomNavigationBar: SizedBox(
-          height: itemHeight*2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          height: itemHeight,
+          width: itemHeight,
+          child: Row(
             children: [
-              StreamBuilder(
-                stream: context.watch<HomeCubit>().player.positionStream,
-                builder: (context, snapshot) => ProgressBar(
-                  thumbGlowRadius: 0,
-                  thumbRadius: 5,
-                  progress: snapshot.data!,
-                  progressBarColor:Colors.yellow,
-                  thumbColor: Colors.yellow,
-                  total: context.watch<HomeCubit>().player.duration??const Duration(seconds: 0),
-                  onSeek: (value) {
-                    context.read<HomeCubit>().player.seek(value);
-                  },
+              SizedBox(
+                height: itemImageHeight,
+                width: itemImageWidth,
+                child: QueryArtworkWidget(
+                  id: context.watch<HomeCubit>().currentSong!.id,
+                  type: ArtworkType.AUDIO,
+                  artworkBorder: BorderRadius.circular(0),
+                  artworkFit: BoxFit.cover,
+                  nullArtworkWidget: Icon(Icons.music_note),
                 ),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      Text(context.watch<HomeCubit>().currentSong!.title??""),
-                      IconButton(
-                        onPressed: () {
-                          context.read<HomeCubit>().playPause();
-                        },
-                        icon: !context.read<HomeCubit>().player.playing?const Icon(Icons.play_arrow_rounded):const Icon(Icons.pause),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          context.read<HomeCubit>().enableShuffleMode();
-                        },
-                        icon: context.read<HomeCubit>(). player.shuffleModeEnabled?const Icon(Icons.shuffle):const Icon(Icons.arrow_right_alt),
-                      ),
-                    ],
-                  )
-                ),
-              )
+              Text(context.watch<HomeCubit>().currentSong!.title??""),
+              IconButton(
+                onPressed: () {
+                  context.read<HomeCubit>().playPause();
+                },
+                icon: !context.read<HomeCubit>().player.playing?const Icon(Icons.play_arrow_rounded):const Icon(Icons.pause),
+              ),
+              IconButton(
+                onPressed: () {
+                  context.read<HomeCubit>().enableShuffleMode();
+                },
+                icon: context.read<HomeCubit>(). player.shuffleModeEnabled?const Icon(Icons.shuffle):const Icon(Icons.arrow_right_alt),
+              ),
             ],
           ),
         ),

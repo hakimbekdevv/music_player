@@ -21,7 +21,6 @@ class HomeCubit extends Cubit<HomeStates> {
         children: songs.map((song) => AudioSource.uri(Uri.parse(song.uri!))).toList(),
       );
       await player.setAudioSource(playlist,);
-      player.play();
       emit(HomeLoadedState(songs: songs));
     } catch(e) {
       emit(HomeErrorState(error: "Xatolik yuz berdi"));

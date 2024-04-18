@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:music_player/ui/home/cubit/home_cubit.dart';
-import 'package:music_player/ui/home/presentation/home_screen.dart';
-import 'package:permission_handler/permission_handler.dart';
+
+import 'package:music_player/utils/tools/file_importers.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,15 +19,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => HomeCubit(),)
+        BlocProvider(create: (context) => HomeCubit(),),
+        BlocProvider(create: (context) => SplashCubit(),)
       ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellow),
-          useMaterial3: true,
-        ),
-        home: const HomeScreen(),
+      child: MaterialApp.router(
+        title: 'Music Player',
+        routerConfig: router,
+        builder: (context, child) => BackgroundWrapper(child: child!),
+        darkTheme: MyTheme.lightThemeData,
+        theme: MyTheme.lightThemeData,
       ),
     );
   }
