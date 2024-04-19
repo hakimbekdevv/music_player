@@ -4,9 +4,14 @@ class MyTheme {
   static ThemeData lightThemeData = ThemeData(
     useMaterial3: true,
     fontFamily: "Font1",
-    textTheme: const TextTheme(
-      bodyMedium: TextStyle(color: Colors.white,),
+    iconTheme: const IconThemeData(
+      color: Colors.white
+    ),
 
+    textTheme: TextTheme(
+      bodyMedium: TextStyle(color: Colors.white,),
+      bodyLarge: TextStyle(color: Colors.white),
+      bodySmall: TextStyle(color: Colors.black54.withOpacity(.7),fontSize: 12),
     ),
     drawerTheme: const DrawerThemeData(backgroundColor: Colors.white),
     colorScheme: const ColorScheme.light(

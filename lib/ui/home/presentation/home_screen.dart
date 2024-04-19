@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:music_player/utils/tools/file_importers.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Text(state.error!),
           );
         }
-        else if (state is HomeLoadedState){
+        else if (state is HomeLoadedState || state is HomeChangeState) {
           return _myScaffold(context);
         } else {
           return const SizedBox();
@@ -44,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
               child: Container(
-                color: Colors.white10.withAlpha(100),
+                color: Colors.white10.withAlpha(10),
               ),
             ),
           ),
@@ -85,36 +87,62 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(),
           ],
         ),
-        bottomNavigationBar: SizedBox(
-          height: itemHeight,
-          width: itemHeight,
-          child: Row(
-            children: [
-              SizedBox(
-                height: itemImageHeight,
-                width: itemImageWidth,
-                child: QueryArtworkWidget(
-                  id: context.watch<HomeCubit>().currentSong!.id,
-                  type: ArtworkType.AUDIO,
-                  artworkBorder: BorderRadius.circular(0),
-                  artworkFit: BoxFit.cover,
-                  nullArtworkWidget: Icon(Icons.music_note),
+        bottomNavigationBar: GestureDetector(
+          onTap: () => context.push(RouteNames.detail),
+          child: SizedBox(
+            height: itemHeight,
+            width: itemHeight,
+            child: Row(
+              children: [
+                SizedBox(
+                  height: itemImageHeight,
+                  width: itemImageWidth,
+                  child: QueryArtworkWidget(
+                    id: context.watch<HomeCubit>().currentSong!.id,
+                    type: ArtworkType.AUDIO,
+                    artworkBorder: BorderRadius.circular(0),
+                    artworkFit: BoxFit.cover,
+                    nullArtworkWidget: Container(
+                      height: itemImageHeight,
+                      width: itemImageWidth,
+                      decoration: const BoxDecoration(
+                        color: Colors.black12,
+                      ),
+                      child: const Icon(CupertinoIcons.music_note_2,color: Colors.white,size: 30,),
+                    ),
+                  ),
                 ),
-              ),
-              Text(context.watch<HomeCubit>().currentSong!.title??""),
-              IconButton(
-                onPressed: () {
-                  context.read<HomeCubit>().playPause();
-                },
-                icon: !context.read<HomeCubit>().player.playing?const Icon(Icons.play_arrow_rounded):const Icon(Icons.pause),
-              ),
-              IconButton(
-                onPressed: () {
-                  context.read<HomeCubit>().enableShuffleMode();
-                },
-                icon: context.read<HomeCubit>(). player.shuffleModeEnabled?const Icon(Icons.shuffle):const Icon(Icons.arrow_right_alt),
-              ),
-            ],
+                SizedBox(width: 10,),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(context.watch<HomeCubit>().currentSong!.title??"",maxLines: 1,style: Theme.of(context).textTheme.bodyMedium,overflow: TextOverflow.visible,),
+                      Text(context.watch<HomeCubit>().currentSong!.artist??"",maxLines: 1,style: Theme.of(context).textTheme.bodySmall,overflow: TextOverflow.visible),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    context.read<HomeCubit>().playPause();
+                  },
+                  icon: !context.read<HomeCubit>().player.playing?const Icon(CupertinoIcons.play_fill):const Icon(CupertinoIcons.pause_fill),
+                ),
+                IconButton(
+                  onPressed: () {
+                    context.read<HomeCubit>().nextTo();
+                  },
+                  icon:Icon(CupertinoIcons.forward_end_fill)
+                ),
+                IconButton(
+                  onPressed: () {
+                    context.read<HomeCubit>().enableShuffleMode();
+                  },
+                  icon: context.read<HomeCubit>(). player.shuffleModeEnabled?const Icon(Icons.shuffle):const Icon(Icons.repeat),
+                ),
+              ],
+            ),
           ),
         ),
       ),

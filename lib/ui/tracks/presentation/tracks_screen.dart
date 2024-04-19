@@ -12,7 +12,7 @@ class TracksScreen extends StatelessWidget {
     return ListView.builder(
       itemCount: context.watch<HomeCubit>().songs.length,
       itemBuilder: (context, index) {
-        return MusicItem(songModel: context.watch<HomeCubit>().songs[index],);
+        return MusicItem(songModel: context.watch<HomeCubit>().songs[index],id:context.watch<HomeCubit>().currentSong!.id);
       },
     );
   }

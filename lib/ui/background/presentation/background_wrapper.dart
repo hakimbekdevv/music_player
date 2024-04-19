@@ -14,7 +14,6 @@ class BackgroundWrapper extends StatelessWidget {
           colors: [
             Color.fromRGBO(28, 255, 255, 1.0),
             Color.fromRGBO(30, 141, 203, 1.0),
-
           ]
         )
         // image: DecorationImage(

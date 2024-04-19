@@ -19,3 +19,4 @@ export 'package:music_player/utils/tools/app_router.dart';
 export 'package:permission_handler/permission_handler.dart';
 export 'package:music_player/ui/splash/cubit/splash_cubit.dart';
 export 'package:music_player/data/theme/my_theme.dart';
+export 'package:like_button/like_button.dart';
