@@ -1,9 +1,7 @@
-import 'dart:io';
+
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:music_player/utils/tools/file_importers.dart';
 
 class HomeScreen extends StatefulWidget {

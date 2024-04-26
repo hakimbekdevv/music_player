@@ -1,5 +1,4 @@
-import 'package:music_player/ui/home/cubit/home_state.dart';
-import 'package:music_player/ui/widgets/adition_control.dart';
+
 import 'package:music_player/utils/tools/file_importers.dart';
 
 class HomeCubit extends Cubit<HomeStates> {
@@ -12,6 +11,7 @@ class HomeCubit extends Cubit<HomeStates> {
   List<SongModel> songs = [];
   SongModel? currentSong;
   final player = AudioPlayer();
+  Timer? _debounce;
 
 
   getSongs() async {
@@ -22,30 +22,32 @@ class HomeCubit extends Cubit<HomeStates> {
       final playlist = ConcatenatingAudioSource(
         children: songs.map((song) => AudioSource.uri(Uri.parse(song.uri!),tag: song.id)).toList(),
       );
+
       await player.setAudioSource(playlist,);
       emit(HomeLoadedState(songs: songs));
     } catch(e) {
+      print(e);
       emit(HomeErrorState(error: "Xatolik yuz berdi"));
     }
   }
 
   void playSong(SongModel song) {
-    try {
-      currentSong = song;
-      player.stop();
-      emit(HomeChangeState());
-      int selectedSongIndex = songs.indexWhere((value) => song.id == value.id);
-      if (selectedSongIndex<player.currentIndex!) {
-        player.seek(Duration.zero,index:player.currentIndex!-(player.currentIndex!-selectedSongIndex).abs());
-      } else {
-        player.seek(Duration.zero,index: player.currentIndex!+(player.currentIndex!-selectedSongIndex).abs());
+    currentSong = song;
+    player.stop();
+    emit(HomeChangeState());
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      try {
+        currentSong = song;
+        player.stop();
+        int selectedSongIndex = songs.indexWhere((value) => song.id == value.id);
+        player.seek(Duration.zero, index: selectedSongIndex);
+        player.play();
+        streamSong();
+      } catch (e) {
+        emit(HomeErrorState(error: "Xatolik yuz berdi"));
       }
-      player.play();
-      streamSong();
-      // emit(HomeChangeState());
-    } catch (e) {
-      emit(HomeErrorState(error: "Xatolik yuz berdi"));
-    }
+    });
   }
 
   void streamSong() {

@@ -20,3 +20,8 @@ export 'package:permission_handler/permission_handler.dart';
 export 'package:music_player/ui/splash/cubit/splash_cubit.dart';
 export 'package:music_player/data/theme/my_theme.dart';
 export 'package:like_button/like_button.dart';
+export 'dart:async';
+export 'package:music_player/ui/widgets/adition_control.dart';
+export 'dart:io';
+
+export 'package:flutter/widgets.dart';

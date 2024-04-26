@@ -10,8 +10,8 @@ class MyTheme {
 
     textTheme: TextTheme(
       bodyMedium: TextStyle(color: Colors.white,),
-      bodyLarge: TextStyle(color: Colors.white),
-      bodySmall: TextStyle(color: Colors.black54.withOpacity(.7),fontSize: 12),
+      bodyLarge: TextStyle(color: Colors.white,),
+      bodySmall: TextStyle(color: Colors.black54,fontSize: 12),
     ),
     drawerTheme: const DrawerThemeData(backgroundColor: Colors.white),
     colorScheme: const ColorScheme.light(
