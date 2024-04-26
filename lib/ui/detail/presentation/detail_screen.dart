@@ -28,6 +28,8 @@ class DetailScreen extends StatelessWidget {
                   type: ArtworkType.AUDIO,
                   artworkBorder: BorderRadius.circular(0),
                   artworkFit: BoxFit.cover,
+                  artworkWidth: double.infinity,
+                  artworkHeight: double.infinity,
                   nullArtworkWidget: Container(
                     height: double.infinity,
                     width: double.infinity,
@@ -67,16 +69,85 @@ class DetailScreen extends StatelessWidget {
                       ],
                     ),
                     Text(context.watch<HomeCubit>().currentSong!.artist ?? "",style: Theme.of(context).textTheme.bodySmall,),
+                    SizedBox(height:20,),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(CupertinoIcons.plus_app,size: 30,),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                          },
+                          icon: Icon(CupertinoIcons.waveform_path_ecg,size: 30,),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            context.watch<HomeCubit>().aditionControlSheet(context,songModel: context.watch<HomeCubit>().currentSong);
+                          },
+                          icon: Icon(Icons.more_horiz_outlined,size: 30,),
+                        ),
                       ],
                     ),
-                    // ProgressBar(
-                    //   total: context.watch<HomeCubit>().player.duration!,
-                    //   onSeek: (value) => context.watch<HomeCubit>().player.seek(position),
-                    //
-                    // )
+                    SizedBox(height:20,),
+                    StreamBuilder(
+                      stream: context.watch<HomeCubit>().player.positionStream,
+                      builder: (context, snapshot) => ProgressBar(
+                        thumbGlowRadius: 0,
+                        thumbRadius: 5,
+                        progress: snapshot.data??Duration(seconds: 0),
+                        progressBarColor:Colors.yellow,
+                        thumbColor: Colors.yellow,
+                        total: context.watch<HomeCubit>().player.duration??Duration(seconds: 0),
+                        onSeek: (value) {
+                          context.read<HomeCubit>().player.seek(value);
+                        },
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            context.read<HomeCubit>().enableShuffleMode();
+                          },
+                          icon: context.read<HomeCubit>(). player.shuffleModeEnabled?const Icon(Icons.shuffle):const Icon(Icons.repeat),
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  context.read<HomeCubit>().nextTo();
+                                },
+                                icon:Icon(CupertinoIcons.backward_end_fill,size: 32,)
+                            ),
+                            SizedBox(width: 20,),
+                            IconButton(
+                              onPressed: () {
+                                context.read<HomeCubit>().playPause();
+                              },
+                              icon: !context.read<HomeCubit>().player.playing?
+                              const Icon(CupertinoIcons.play_fill,size: 32,)
+                                  :const Icon(CupertinoIcons.pause_fill,size: 32,),
+                            ),
+                            SizedBox(width: 20,),
+                            IconButton(
+                                onPressed: () {
+                                  context.read<HomeCubit>().nextTo();
+                                },
+                                icon:Icon(CupertinoIcons.forward_end_fill,size: 32,)
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            context.read<HomeCubit>().enableShuffleMode();
+                          },
+                          icon: Icon(CupertinoIcons.bell),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),

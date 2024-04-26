@@ -67,7 +67,7 @@ class AditionControl extends StatelessWidget {
                               onPressed: () {
                                 context.read<HomeCubit>().nextTo();
                               },
-                              icon:const Icon(Icons.add_box_outlined,size: 28)
+                              icon:const Icon(CupertinoIcons.plus_app,size: 28)
                           ),
                           const Text('Add to')
                         ],

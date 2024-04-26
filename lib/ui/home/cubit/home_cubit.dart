@@ -20,7 +20,7 @@ class HomeCubit extends Cubit<HomeStates> {
       songs = await audioQuery.querySongs();
       currentSong = songs[0];
       final playlist = ConcatenatingAudioSource(
-        children: songs.map((song) => AudioSource.uri(Uri.parse(song.uri!),tag: song.id)).toList(),
+        children: songs.map((song) => AudioSource.uri(Uri.parse(song.uri!),tag: song)).toList(),
       );
 
       await player.setAudioSource(playlist,);
@@ -43,6 +43,7 @@ class HomeCubit extends Cubit<HomeStates> {
         int selectedSongIndex = songs.indexWhere((value) => song.id == value.id);
         player.seek(Duration.zero, index: selectedSongIndex);
         player.play();
+        emit(HomeChangeState());
         streamSong();
       } catch (e) {
         emit(HomeErrorState(error: "Xatolik yuz berdi"));
@@ -53,7 +54,8 @@ class HomeCubit extends Cubit<HomeStates> {
   void streamSong() {
     player.playerStateStream.listen((playerState) {
       if (playerState.processingState == ProcessingState.completed) {
-        player.seek(Duration.zero, index: player.currentIndex! + 1);
+        nextTo();
+        emit(HomeChangeState());
       }
     });
   }
@@ -68,9 +70,19 @@ class HomeCubit extends Cubit<HomeStates> {
       player.seek(Duration.zero, index: 0);
       currentSong=songs[0];
     } else  {
-      player.seek(Duration.zero, index: player.currentIndex! + 1);
-      int selectedSongIndex = songs.indexWhere((value) =>  player.sequenceState?.currentSource!.tag.toString() == value.id.toString())+1;
-      currentSong = songs[selectedSongIndex];
+      player.seekToNext();
+    }
+    player.play();
+    currentSong = player.sequenceState!.currentSource!.tag;
+    emit(HomeChangeState());
+  }
+
+  void previous() {
+    if (player.currentIndex==songs.length-1) {
+      currentSong=songs[0];
+    } else  {
+      player.seekToPrevious();
+      currentSong = currentSong = player.sequenceState!.currentSource!.tag;
     }
     player.play();
     emit(HomeChangeState());
